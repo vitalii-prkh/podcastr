@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import {usePathname, useRouter} from "next/navigation";
+import {SignedIn, SignedOut, useClerk} from "@clerk/nextjs";
 import {sidebarLinks} from "@/constants";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
@@ -10,9 +11,7 @@ import {cn} from "@/lib/utils";
 export function LeftSidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const signOut = (fn: () => void) => {
-    fn();
-  };
+  const {signOut} = useClerk();
 
   return (
     <section className={cn("left_sidebar h-[calc(100vh-5px)]")}>
@@ -57,7 +56,7 @@ export function LeftSidebar() {
           );
         })}
       </nav>
-      <div>
+      <SignedOut>
         <div className="flex-center w-full pb-14 max-lg:px-4 lg:pr-8">
           <Button
             asChild
@@ -66,8 +65,8 @@ export function LeftSidebar() {
             <Link href="/sign-in">Sign in</Link>
           </Button>
         </div>
-      </div>
-      <div>
+      </SignedOut>
+      <SignedIn>
         <div className="flex-center w-full pb-14 max-lg:px-4 lg:pr-8">
           <Button
             className="text-16 w-full bg-orange-1 font-extrabold"
@@ -76,7 +75,7 @@ export function LeftSidebar() {
             Log Out
           </Button>
         </div>
-      </div>
+      </SignedIn>
     </section>
   );
 }
