@@ -46,20 +46,14 @@ function PagePodcastCreate() {
   const [imageStorageId, setImageStorageId] =
     React.useState<Id<"_storage"> | null>(null);
   const [imageUrl, setImageUrl] = React.useState("");
-
   const [audioUrl, setAudioUrl] = React.useState("");
   const [audioStorageId, setAudioStorageId] =
     React.useState<Id<"_storage"> | null>(null);
   const [audioDuration, setAudioDuration] = React.useState(0);
-
   const [voiceType, setVoiceType] = React.useState<string | null>(null);
   const [voicePrompt, setVoicePrompt] = React.useState("");
-
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-
   const createPodcast = useMutation(api.podcasts.createPodcast);
-
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -71,13 +65,15 @@ function PagePodcastCreate() {
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
       setIsSubmitting(true);
+
       if (!audioUrl || !imageUrl || !voiceType) {
         toast.error("Please generate audio and image");
         setIsSubmitting(false);
+
         throw new Error("Please generate audio and image");
       }
 
-      const podcast = await createPodcast({
+      await createPodcast({
         podcastTitle: data.podcastTitle,
         podcastDescription: data.podcastDescription,
         audioUrl,
@@ -94,7 +90,6 @@ function PagePodcastCreate() {
       setIsSubmitting(false);
       router.push("/");
     } catch (error) {
-      console.log(error);
       toast.error("Error");
       setIsSubmitting(false);
     }
@@ -103,7 +98,6 @@ function PagePodcastCreate() {
   return (
     <section className="mt-10 flex flex-col">
       <h1 className="text-20 font-bold text-white-1">Create Podcast</h1>
-
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -166,7 +160,6 @@ function PagePodcastCreate() {
                 )}
               </Select>
             </div>
-
             <FormField
               control={form.control}
               name="podcastDescription"
@@ -197,7 +190,6 @@ function PagePodcastCreate() {
               setVoicePrompt={setVoicePrompt}
               setAudioDuration={setAudioDuration}
             />
-
             <GenerateThumbnail
               setImage={setImageUrl}
               setImageStorageId={setImageStorageId}
@@ -205,20 +197,19 @@ function PagePodcastCreate() {
               imagePrompt={imagePrompt}
               setImagePrompt={setImagePrompt}
             />
-
             <div className="mt-10 w-full">
               <Button
                 type="submit"
                 className="text-16 w-full bg-orange-1 py-4 font-extrabold text-white-1 transition-all duration-500 hover:bg-black-1"
               >
                 {isSubmitting ? (
-                  <>
+                  <React.Fragment>
                     Submitting
                     <Loader
                       size={20}
                       className="ml-2 animate-spin"
                     />
-                  </>
+                  </React.Fragment>
                 ) : (
                   "Submit & Publish Podcast"
                 )}

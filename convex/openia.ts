@@ -25,18 +25,25 @@ export const generateAudioAction = action({
 
 export const generateThumbnailAction = action({
   args: {
-    input: v.string(),
-    voice: v.string(),
+    prompt: v.string(),
   },
-  handler: async (_, args) => {
-    const {voice, input} = args;
-    const mp3 = await openai.audio.speech.create({
-      model: "tts-1",
-      voice,
-      input,
+  handler: async (_, {prompt}) => {
+    const response = await openai.images.generate({
+      model: "dall-e-3",
+      prompt,
+      size: "1024x1024",
+      quality: "standard",
+      n: 1,
     });
 
-    const buffer = await mp3.arrayBuffer();
+    const url = response.data?.[0].url;
+
+    if (!url) {
+      throw new Error("Error generating thumbnail");
+    }
+
+    const imageResponse = await fetch(url);
+    const buffer = await imageResponse.arrayBuffer();
 
     return buffer;
   },
