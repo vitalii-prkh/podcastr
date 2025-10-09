@@ -153,3 +153,22 @@ export const getPodcastBySearch = query({
       .take(10);
   },
 });
+
+export const getPodcastByAuthorId = query({
+  args: {
+    authorId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const podcasts = await ctx.db
+      .query("podcasts")
+      .filter((q) => q.eq(q.field("authorId"), args.authorId))
+      .collect();
+
+    const totalListeners = podcasts.reduce(
+      (sum, podcast) => sum + podcast.views,
+      0,
+    );
+
+    return {podcasts, listeners: totalListeners};
+  },
+});
