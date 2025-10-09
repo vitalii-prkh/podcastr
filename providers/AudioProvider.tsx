@@ -8,7 +8,7 @@ const AudioContext = React.createContext<AudioContextType | undefined>(
   undefined,
 );
 
-function AudioProvider({children}: {children: React.ReactNode}) {
+export function AudioProvider({children}: {children: React.ReactNode}) {
   const [audio, setAudio] = React.useState<AudioProps | undefined>();
   const pathname = usePathname();
 
@@ -34,5 +34,3 @@ export function useAudio() {
 
   return context;
 }
-
-export default AudioProvider;

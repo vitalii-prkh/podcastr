@@ -2,6 +2,7 @@ import React from "react";
 import type {Metadata} from "next";
 import {Manrope} from "next/font/google";
 import {ConvexClerkProvider} from "@/providers/ConvexClerkProvider";
+import {AudioProvider} from "@/providers/AudioProvider";
 import "./globals.css";
 
 const manrope = Manrope({subsets: ["latin"]});
@@ -21,9 +22,11 @@ type RootLayoutProps = Readonly<{
 function RootLayout(props: RootLayoutProps) {
   return (
     <html lang="en">
-      <body className={manrope.className}>
-        <ConvexClerkProvider>{props.children}</ConvexClerkProvider>
-      </body>
+      <AudioProvider>
+        <body className={manrope.className}>
+          <ConvexClerkProvider>{props.children}</ConvexClerkProvider>
+        </body>
+      </AudioProvider>
     </html>
   );
 }
